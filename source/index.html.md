@@ -119,7 +119,7 @@ This endpoint authenticates a voting request for a particular user (for example,
 
 `GET https://electionbuddy.com/sso?{parameters}`
 
-### Query / POST Parameters
+### Query Parameters
 
 Parameter | Description
 --------- | -----------
