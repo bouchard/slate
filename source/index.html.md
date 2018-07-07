@@ -1,15 +1,13 @@
 ---
-title: API Reference
+title: ElectionBuddy API Documentation
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
   - ruby
   - python
-  - javascript
+  - php
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
+  - Back to <a href='https://electionbuddy.com'>electionbuddy.com</a>
 
 includes:
   - errors
@@ -19,221 +17,121 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the API documentation for ElectionBuddy (electionbuddy.com). Currently the only open API we offer is single sign-on (SSO) for authenticating individual voters.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+# Single Sign-On (SSO)
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
-# Authentication
-
-> To authorize, use this code:
+> The function/method below will generate a signed anchor `<a>` element that you can use on your organization's internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization's design or theme. You'll need to pass in `eid`, `mid`, and `secret_key` as appropriate.
 
 ```ruby
-require 'kittn'
+require 'addressable/uri'
+require 'base64'
+require 'openssl'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+eid = '12'
+mid = 'jane@example.com'
+# `secret_key` obtained at `https://electionbuddy.com/admin/secret-key`.
+secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+
+def generate_vote_anchor(secret_key, eid, mid)
+  url = 'https://electionbuddy.com/sso'
+
+  query_values = {
+    eid: eid,
+    exp: Time.now.to_i,
+    mid: mid
+  }
+
+  uri = Addressable::URI.parse(url)
+  uri.query_values = query_values
+  message = uri.query
+  signature = Base64.strict_encode64(
+    OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), secret_key, message)
+  )
+  uri.query_values = query_values.merge(signature: signature)
+  "<a href='#{uri}' class='electionbuddy-vote-button'>Vote now</a>"
+end
 ```
 
 ```python
-import kittn
+import base64
+import hashlib
+import hmac
+import time
+from urllib.parse import urlparse, urlencode
 
-api = kittn.authorize('meowmeowmeow')
+eid = '12'
+mid = 'jane@example.com'
+# `secret_key` obtained at `https://electionbuddy.com/admin/secret-key`.
+secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+
+def generate_vote_anchor(secret_key, eid, mid):
+  url = 'https://electionbuddy.com/sso'
+
+  query_values = {
+    'eid' : eid,
+    'exp' : int(time.time()),
+    'mid' : mid
+  }
+
+  message = urlencode(query_values)
+  signature = base64.b64encode(
+    hmac.new(secret_key.encode(), message.encode(), hashlib.sha256).digest()
+  ).decode()
+  query_values['signature'] = signature
+  message = urlencode(query_values)
+  uri = url + '?' + message
+  return "<a href='" + uri + "' class='electionbuddy-vote-button'>Vote now</a>"
 ```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+```php
+<?
+
+$eid = '12';
+$mid = 'jane@example.com';
+# `secret_key` obtained at `https://electionbuddy.com/admin/secret-key`.
+$secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs=';
+
+function generate_vote_anchor($secret_key, $eid, $mid) {
+  $url = 'https://electionbuddy.com/sso';
+
+  $query_values = array(
+    'eid' => $eid,
+    'exp' => time(),
+    'mid' => $mid
+  );
+
+  $message = http_build_query($query_values);
+  $signature = base64_encode(hash_hmac('sha256', $message, $secret_key, true));
+  $query_values['signature'] = $signature;
+  $message = http_build_query($query_values);
+  $uri = $url . '?' . $message;
+
+  return ("<a href='" . $uri . "' class='electionbuddy-vote-button'>Vote now</a>");
+
+}
+?>
 ```
 
-```javascript
-const kittn = require('kittn');
+This endpoint authenticates a voting request for a particular user (for example, from your organization's internal dashboard). If the signature is valid and the voter (identified by `mid`) has yet to vote, they will be forwarded to a fresh ballot for the election `eid`.
 
-let api = kittn.authorize('meowmeowmeow');
-```
+### HTTP Request
 
-> Make sure to replace `meowmeowmeow` with your API key.
+`GET https://electionbuddy.com/sso?{parameters}`
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+### Query / POST Parameters
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+Parameter | Description
+--------- | -----------
+eid | Election ID: when editing your election, your election ID is the numeral that appears in the URL. (`1234` in `https://electionbuddy.com/elections/1234/edit`)
+exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). We validate that this time is +/- 5 minutes from the time the request is received.
+mid | Member ID: A unique identifier for the member who is voting, such as an email address, or a membership ID, or a database primary key. This string can be anything that you can guarantee is unique for each of your voters.
+signature | Generated signature using `secret_key`. See below.
 
-`Authorization: meowmeowmeow`
+* All requests must be signed by `signature` **appended** (as the last parameter) to the query string, and generated from the formatted query string consisting of `eid`, `exp`, and `mid`.
+* Signatures must be generated using HMAC-SHA256 using the `secret_key` for you in your [ElectionBuddy account](https://electionbuddy.com/admin/secret-key). Secret keys are unique to your `Organization` (shared between all elections on your account).
+* All other parameters should appear **alphabetically** in the query string.
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
 </aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
