@@ -17,7 +17,7 @@ search: true
 
 # Introduction
 
-Welcome to the API documentation for ElectionBuddy (electionbuddy.com). Currently the only open API we offer is single sign-on (SSO) for authenticating individual voters.
+Welcome to the SSO API documentation for ElectionBuddy (electionbuddy.com).
 
 # Single Sign-On (SSO)
 
@@ -28,10 +28,14 @@ require 'addressable/uri'
 require 'base64'
 require 'openssl'
 
-eid = '12'
-mid = 'jane@example.com'
-# `secret_key` obtained at `https://electionbuddy.com/admin/secret-key`.
-secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+##### Example values:
+
+# eid = '12'
+# mid = 'jane@example.com'
+# secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+# (`secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+
+#####
 
 def generate_vote_anchor(secret_key, eid, mid)
   url = 'https://electionbuddy.com/sso'
@@ -60,10 +64,14 @@ import hmac
 import time
 from urllib.parse import urlparse, urlencode
 
-eid = '12'
-mid = 'jane@example.com'
-# `secret_key` obtained at `https://electionbuddy.com/admin/secret-key`.
-secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+##### Example values:
+
+# eid = '12'
+# mid = 'jane@example.com'
+# secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+# (`secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+
+#####
 
 def generate_vote_anchor(secret_key, eid, mid):
   url = 'https://electionbuddy.com/sso'
@@ -87,10 +95,14 @@ def generate_vote_anchor(secret_key, eid, mid):
 ```php
 <?
 
-$eid = '12';
-$mid = 'jane@example.com';
-# `secret_key` obtained at `https://electionbuddy.com/admin/secret-key`.
-$secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs=';
+##### Example values:
+
+# $eid = '12'
+# $mid = 'jane@example.com'
+# $secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+# (`$secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+
+#####
 
 function generate_vote_anchor($secret_key, $eid, $mid) {
   $url = 'https://electionbuddy.com/sso';
@@ -124,13 +136,13 @@ This endpoint authenticates a voting request for a particular user (for example,
 Parameter | Description
 --------- | -----------
 eid | Election ID: when editing your election, your election ID is the numeral that appears in the URL. (`1234` in `https://electionbuddy.com/elections/1234/edit`)
-exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). We validate that this time is +/- 5 minutes from the time the request is received.
+exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). This time must be +/- 5 minutes from the time the request is received.
 mid | Member ID: A unique identifier for the member who is voting, such as an email address, or a membership ID, or a database primary key. This string can be anything that you can guarantee is unique for each of your voters.
 signature | Generated signature using `secret_key`. See below.
 
 * All requests must be signed by `signature` **appended** (as the last parameter) to the query string, and generated from the formatted query string consisting of `eid`, `exp`, and `mid`.
 * Signatures must be generated using HMAC-SHA256 using the `secret_key` for you in your [ElectionBuddy account](https://electionbuddy.com/admin/secret-key). Secret keys are unique to your `Organization` (shared between all elections on your account).
-* All other parameters should appear **alphabetically** in the query string.
+* All other parameters should appear **alphabetically** in the query string (i.e. `eid`, `exp`, `mid`).
 
 <aside class="notice">
 Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.

@@ -1,6 +1,6 @@
 # Errors
 
-The ElectionBuddy API uses the following error codes:
+The ElectionBuddy SSO API returns the following error codes:
 
 
 Error Code | Meaning
