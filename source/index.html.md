@@ -136,12 +136,12 @@ This endpoint authenticates a voting request for a particular user (for example,
 Parameter | Description
 --------- | -----------
 eid | Election ID: when editing your election, your election ID is the numeral that appears in the URL. (`1234` in `https://electionbuddy.com/elections/1234/edit`)
-exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). This time must be +/- 5 minutes from the time the request is received.
-mid | Member ID: A unique identifier for the member who is voting, such as an email address, or a membership ID, or a database primary key. This string can be anything that you can guarantee is unique for each of your voters.
+exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). This time must be +/- 5 minutes from the time the request is received. If `exp` is older than 5 minutes, the voter will be directed to a "Link Expired" page.
+mid | Member ID: A unique identifier for the member who is voting, such as an email address, or a membership ID, or a database primary key. This string can be anything that you can guarantee is unique for each of your voters. If a ballot attached to this member ID is already on your ElectionBuddy election voter list, this ballot will be shown to the authenticated voter. If there is no voter on your ElectionBuddy election voter list with this member ID, a fresh ballot will be created with an anonymized ballot ID.
 signature | Generated signature using `secret_key`. See below.
 
 * All requests must be signed by `signature` **appended** (as the last parameter) to the query string, and generated from the formatted query string consisting of `eid`, `exp`, and `mid`.
-* Signatures must be generated using HMAC-SHA256 using the `secret_key` for you in your [ElectionBuddy account](https://electionbuddy.com/admin/secret-key). Secret keys are unique to your `Organization` (shared between all elections on your account).
+* Signatures must be generated using HMAC-SHA256 using the `secret_key` for your election in your [ElectionBuddy account](https://electionbuddy.com/elections/1234/secret-key). Secret keys are unique to your `Election`.
 * All other parameters should appear **alphabetically** in the query string (i.e. `eid`, `exp`, `mid`).
 
 <aside class="notice">
