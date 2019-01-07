@@ -21,7 +21,7 @@ Welcome to the SSO API documentation for ElectionBuddy (electionbuddy.com).
 
 # Single Sign-On (SSO)
 
-> The function/method below will generate a signed anchor `<a>` element that you can use on your organization's internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization's design or theme. You'll need to pass in `eid`, `mid`, and `secret_key` as appropriate.
+> The function/method below will generate a signed anchor `<a>` element that you can use on your organization's internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization's design or theme. You'll need to pass in `eid`, `exp`, `mid`, and `signature` as appropriate.
 
 ```ruby
 require 'addressable/uri'
@@ -49,8 +49,8 @@ def generate_vote_anchor(secret_key, eid, mid)
   uri = Addressable::URI.parse(url)
   uri.query_values = query_values
   message = uri.query
-  signature = Base64.strict_encode64(
-    OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), secret_key, message)
+  signature = Base64.urlsafe_encode64(
+    OpenSSL::HMAC.digest('sha256', secret_key, message)
   )
   uri.query_values = query_values.merge(signature: signature)
   "<a href='#{uri}' class='electionbuddy-vote-button'>Vote now</a>"
@@ -83,7 +83,7 @@ def generate_vote_anchor(secret_key, eid, mid):
   }
 
   message = urlencode(query_values)
-  signature = base64.b64encode(
+  signature = base64.urlsafe_b64encode(
     hmac.new(secret_key.encode(), message.encode(), hashlib.sha256).digest()
   ).decode()
   query_values['signature'] = signature
@@ -114,7 +114,7 @@ function generate_vote_anchor($secret_key, $eid, $mid) {
   );
 
   $message = http_build_query($query_values);
-  $signature = base64_encode(hash_hmac('sha256', $message, $secret_key, true));
+  $signature = strtr(base64_encode(hash_hmac('sha256', $message, $secret_key, true)), '+/', '-_');
   $query_values['signature'] = $signature;
   $message = http_build_query($query_values);
   $uri = $url . '?' . $message;
