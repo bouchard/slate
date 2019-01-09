@@ -141,7 +141,7 @@ mid | Member ID: A unique identifier for the member who is voting, such as an em
 signature | Generated signature using `secret_key`. See below.
 
 * All requests must be signed by `signature` **appended** (as the last parameter) to the query string, and generated from the formatted query string consisting of `eid`, `exp`, and `mid`.
-* Signatures must be generated using HMAC-SHA256 using the `secret_key` for your election in your [ElectionBuddy account](https://electionbuddy.com/elections/1234/secret). Secret keys are unique to your `Election`.
+* Signatures must be generated using HMAC-SHA256 using the `secret_key` for your election in your [ElectionBuddy account](https://electionbuddy.com/accounts/secret). Secret keys are unique to your `Election`.
 * All other parameters should appear **alphabetically** in the query string (i.e. `eid`, `exp`, `mid`).
 
 <aside class="notice">
