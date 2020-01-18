@@ -250,7 +250,7 @@
 <p>Welcome to the SSO API documentation for ElectionBuddy (electionbuddy.com).</p>
 <h1 id='single-sign-on-sso'>Single Sign-On (SSO)</h1>
 <blockquote>
-<p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>mid</code>, and <code>secret_key</code> as appropriate.</p>
+<p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>exp</code>, <code>mid</code>, and <code>signature</code> as appropriate.</p>
 </blockquote>
 <pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
 <span class="nb">require</span> <span class="s1">'base64'</span>
@@ -277,8 +277,8 @@
   <span class="n">uri</span> <span class="o">=</span> <span class="no">Addressable</span><span class="o">::</span><span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
   <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span>
   <span class="n">message</span> <span class="o">=</span> <span class="n">uri</span><span class="p">.</span><span class="nf">query</span>
-  <span class="n">signature</span> <span class="o">=</span> <span class="no">Base64</span><span class="p">.</span><span class="nf">strict_encode64</span><span class="p">(</span>
-    <span class="no">OpenSSL</span><span class="o">::</span><span class="no">HMAC</span><span class="p">.</span><span class="nf">digest</span><span class="p">(</span><span class="no">OpenSSL</span><span class="o">::</span><span class="no">Digest</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">),</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="no">Base64</span><span class="p">.</span><span class="nf">urlsafe_encode64</span><span class="p">(</span>
+    <span class="no">OpenSSL</span><span class="o">::</span><span class="no">HMAC</span><span class="p">.</span><span class="nf">digest</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
   <span class="p">)</span>
   <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="ss">signature: </span><span class="n">signature</span><span class="p">)</span>
   <span class="s2">"&lt;a href='</span><span class="si">#{</span><span class="n">uri</span><span class="si">}</span><span class="s2">' class='electionbuddy-vote-button'&gt;Vote now&lt;/a&gt;"</span>
@@ -308,7 +308,7 @@
   <span class="p">}</span>
 
   <span class="n">message</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_values</span><span class="p">)</span>
-  <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span>
     <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
   <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
   <span class="n">query_values</span><span class="p">[</span><span class="s">'signature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">signature</span>
@@ -336,7 +336,7 @@
   <span class="p">);</span>
 
   <span class="nv">$message</span> <span class="o">=</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$query_values</span><span class="p">);</span>
-  <span class="nv">$signature</span> <span class="o">=</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nb">hash_hmac</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="nv">$message</span><span class="p">,</span> <span class="nv">$secret_key</span><span class="p">,</span> <span class="kc">true</span><span class="p">));</span>
+  <span class="nv">$signature</span> <span class="o">=</span> <span class="nb">strtr</span><span class="p">(</span><span class="nb">base64_encode</span><span class="p">(</span><span class="nb">hash_hmac</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="nv">$message</span><span class="p">,</span> <span class="nv">$secret_key</span><span class="p">,</span> <span class="kc">true</span><span class="p">)),</span> <span class="s1">'+/'</span><span class="p">,</span> <span class="s1">'-_'</span><span class="p">);</span>
   <span class="nv">$query_values</span><span class="p">[</span><span class="s1">'signature'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$signature</span><span class="p">;</span>
   <span class="nv">$message</span> <span class="o">=</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$query_values</span><span class="p">);</span>
   <span class="nv">$uri</span> <span class="o">=</span> <span class="nv">$url</span> <span class="o">.</span> <span class="s1">'?'</span> <span class="o">.</span> <span class="nv">$message</span><span class="p">;</span>
@@ -362,11 +362,11 @@
 </tr>
 <tr>
 <td>exp</td>
-<td>Request expiration date, in <a href="https://www.epochconverter.com/">Unix Epoch Time</a>. This time must be +/- 5 minutes from the time the request is received.</td>
+<td>Request expiration date, in <a href="https://www.epochconverter.com/">Unix Epoch Time</a>. This time must be +/- 5 minutes from the time the request is received. If <code>exp</code> is older than 5 minutes, the voter will be directed to a &quot;Link Expired&quot; page.</td>
 </tr>
 <tr>
 <td>mid</td>
-<td>Member ID: A unique identifier for the member who is voting, such as an email address, or a membership ID, or a database primary key. This string can be anything that you can guarantee is unique for each of your voters.</td>
+<td>Member ID: A unique identifier for the member who is voting, such as an email address, or a membership ID, or a database primary key. This string can be anything that you can guarantee is unique for each of your voters. If a ballot attached to this member ID is already on your ElectionBuddy election voter list, this ballot will be shown to the authenticated voter. If there is no voter on your ElectionBuddy election voter list with this member ID, a fresh ballot will be created with an anonymized ballot ID.</td>
 </tr>
 <tr>
 <td>signature</td>
@@ -376,7 +376,7 @@
 
 <ul>
 <li>All requests must be signed by <code>signature</code> <strong>appended</strong> (as the last parameter) to the query string, and generated from the formatted query string consisting of <code>eid</code>, <code>exp</code>, and <code>mid</code>.</li>
-<li>Signatures must be generated using HMAC-SHA256 using the <code>secret_key</code> for you in your <a href="https://electionbuddy.com/admin/secret-key">ElectionBuddy account</a>. Secret keys are unique to your <code>Organization</code> (shared between all elections on your account).</li>
+<li>Signatures must be generated using HMAC-SHA256 using the <code>secret_key</code> for your election in your <a href="https://electionbuddy.com/accounts/secret">ElectionBuddy account</a>. Secret keys are unique to your <code>Election</code>.</li>
 <li>All other parameters should appear <strong>alphabetically</strong> in the query string (i.e. <code>eid</code>, <code>exp</code>, <code>mid</code>).</li>
 </ul>
 
@@ -393,8 +393,12 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request -- Your request is invalid (likely the generated signature doesn&#39;t match).</td>
+<td>422</td>
+<td>Unprocessable Entity -- Your request is valid but we were unable to create a ballot based on your request. This usually happens when your election has reached its maximum number of voters.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found -- The election does not exist or is not authorized to use single sign on.</td>
 </tr>
 </tbody></table>
 
