@@ -238,6 +238,17 @@
           <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
           </li>
+          <li>
+            <a href="#voter-status" class="toc-h1 toc-link" data-title="Voter Status">Voter Status</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
+                  </li>
+                  <li>
+                    <a href="#http-response" class="toc-h2 toc-link" data-title="HTTP Response">HTTP Response</a>
+                  </li>
+              </ul>
+          </li>
       </ul>
         <ul class="toc-footer">
             <li>Back to <a href='https://electionbuddy.com'>electionbuddy.com</a></li>
@@ -261,7 +272,7 @@
 <span class="c1"># eid = '12'</span>
 <span class="c1"># mid = 'jane@example.com'</span>
 <span class="c1"># secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
-<span class="c1"># (`secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)</span>
+<span class="c1"># (Contact support to obtain `secret_key`)</span>
 
 <span class="c1">#####</span>
 
@@ -294,7 +305,7 @@
 <span class="c"># eid = '12'</span>
 <span class="c"># mid = 'jane@example.com'</span>
 <span class="c"># secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
-<span class="c"># (`secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)</span>
+<span class="c"># (Contact support to obtain `secret_key`)</span>
 
 <span class="c">#####</span>
 
@@ -322,7 +333,7 @@
 <span class="c1"># $eid = '12'
 # $mid = 'jane@example.com'
 # $secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
-# (`$secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+# (Contact support to obtain `secret_key`)
 </span>
 <span class="c1">#####
 </span>
@@ -388,7 +399,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 
 <table><thead>
 <tr>
-<th>Error Code</th>
+<th>Error code</th>
 <th>Meaning</th>
 </tr>
 </thead><tbody>
@@ -401,6 +412,57 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <td>Not Found -- The election does not exist or is not authorized to use single sign on.</td>
 </tr>
 </tbody></table>
+<h1 id='voter-status'>Voter Status</h1>
+<blockquote>
+<p>Below is an example request to obtain voter status:</p>
+</blockquote>
+<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
+<span class="nb">require</span> <span class="s1">'base64'</span>
+<span class="nb">require</span> <span class="s1">'openssl'</span>
+
+<span class="c1">##### Example values:</span>
+
+<span class="c1"># eid = '12'</span>
+<span class="c1"># mid = 'jane@example.com'</span>
+<span class="c1"># secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
+<span class="c1"># (Contact support to obtain `secret_key`)</span>
+
+<span class="c1">#####</span>
+
+<span class="k">def</span> <span class="nf">get_voter_status</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">eid</span><span class="p">,</span> <span class="n">mid</span><span class="p">)</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://electionbuddy.com/sso'</span>
+
+  <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">eid: </span><span class="n">eid</span><span class="p">,</span>
+    <span class="ss">exp: </span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span>
+    <span class="ss">mid: </span><span class="n">mid</span>
+  <span class="p">}</span>
+
+  <span class="n">uri</span> <span class="o">=</span> <span class="no">Addressable</span><span class="o">::</span><span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+  <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span>
+  <span class="n">message</span> <span class="o">=</span> <span class="n">uri</span><span class="p">.</span><span class="nf">query</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="no">Base64</span><span class="p">.</span><span class="nf">urlsafe_encode64</span><span class="p">(</span>
+    <span class="no">OpenSSL</span><span class="o">::</span><span class="no">HMAC</span><span class="p">.</span><span class="nf">digest</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="p">)</span>
+  <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="ss">signature: </span><span class="n">signature</span><span class="p">)</span>
+  <span class="n">net</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+  <span class="n">net</span><span class="p">.</span><span class="nf">use_ssl</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="n">net</span><span class="p">.</span><span class="nf">headers</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">'Accept'</span> <span class="o">=&gt;</span> <span class="s1">'application/json'</span> <span class="p">}</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="n">net</span><span class="p">.</span><span class="nf">get_response</span>
+  <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+<p>The same endpoint can be used to obtain a voter&#39;s status (<code>{ &#39;voted&#39; : true|false }</code>). This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.</p>
+
+<p>Voter status requests use the same parameters as above, but will request a JSON response (header of: <code>Accept: application/json</code>).</p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>GET https://electionbuddy.com/sso?{parameters}</code> (Header: <code>Accept: application/json</code>)</p>
+<h3 id='http-response'>HTTP Response</h3>
+<ul>
+<li>HTTP code: 200</li>
+<li>Response body: <code>{ &#39;voted&#39; : true|false }</code></li>
+<li>Error codes same as above.</li>
+</ul>
 
       </div>
       <div class="dark-box">
