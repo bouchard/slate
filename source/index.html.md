@@ -11,6 +11,7 @@ toc_footers:
 
 includes:
   - errors
+  - voter-status
 
 search: true
 ---
@@ -33,7 +34,7 @@ require 'openssl'
 # eid = '12'
 # mid = 'jane@example.com'
 # secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
-# (`secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+# (Contact support to obtain `secret_key`)
 
 #####
 
@@ -69,7 +70,7 @@ from urllib.parse import urlparse, urlencode
 # eid = '12'
 # mid = 'jane@example.com'
 # secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
-# (`secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+# (Contact support to obtain `secret_key`)
 
 #####
 
@@ -100,7 +101,7 @@ def generate_vote_anchor(secret_key, eid, mid):
 # $eid = '12'
 # $mid = 'jane@example.com'
 # $secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
-# (`$secret_key` obtained at `https://electionbuddy.com/admin/secret-key`)
+# (Contact support to obtain `secret_key`)
 
 #####
 
