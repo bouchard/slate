@@ -3,9 +3,11 @@
 > Below is an example request to obtain voter status:
 
 ```ruby
+require 'net/http'
 require 'addressable/uri'
 require 'base64'
 require 'openssl'
+require 'json'
 
 ##### Example values:
 
@@ -17,8 +19,8 @@ require 'openssl'
 #####
 
 def get_voter_status(secret_key, eid, mid)
-  url = 'https://electionbuddy.com/sso'
-
+  url = 'https://secure.electionbuddy.com/sso'
+  headers = { 'Accept' => 'application/json' }
   query_values = {
     eid: eid,
     exp: Time.now.to_i,
@@ -32,11 +34,13 @@ def get_voter_status(secret_key, eid, mid)
     OpenSSL::HMAC.digest('sha256', secret_key, message)
   )
   uri.query_values = query_values.merge(signature: signature)
-  net = Net::HTTP.new(uri)
+
+  net = Net::HTTP.new(uri.host, 443)
   net.use_ssl = true
-  net.headers = { 'Accept' => 'application/json' }
-  res = net.get_response
-  JSON.parse(res.body)
+  net.verify_mode = OpenSSL::SSL::VERIFY_PEER
+
+  response = net.post(uri.path, uri.query, headers)
+  JSON.parse(response.body)
 end
 ```
 
@@ -46,7 +50,7 @@ Voter status requests use the same parameters as above, but will request a JSON 
 
 ### HTTP Request
 
-`GET https://electionbuddy.com/sso?{parameters}` (Header: `Accept: application/json`)
+`GET https://secure.electionbuddy.com/sso?{parameters}` (Header: `Accept: application/json`)
 
 ### HTTP Response
 
