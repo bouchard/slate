@@ -244,9 +244,6 @@
                   <li>
                     <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
                   </li>
-                  <li>
-                    <a href="#http-response" class="toc-h2 toc-link" data-title="HTTP Response">HTTP Response</a>
-                  </li>
               </ul>
           </li>
       </ul>
@@ -456,17 +453,25 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
   <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre>
-<p>The same endpoint can be used to obtain a voter&#39;s status (<code>{ &#39;voted&#39; : true|false }</code>). This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.</p>
+<p>The same endpoint can be used to obtain a voter&#39;s status. This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.</p>
 
 <p>Voter status requests use the same parameters as above, but will request a JSON response (header of: <code>Accept: application/json</code>).</p>
 <h3 id='http-request'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/sso?{parameters}</code> (Header: <code>Accept: application/json</code>)</p>
-<h3 id='http-response'>HTTP Response</h3>
-<ul>
-<li>HTTP code: 200</li>
-<li>Response body: <code>{ &#39;voted&#39; : true|false }</code></li>
-<li>Error codes same as above.</li>
-</ul>
+
+<table><thead>
+<tr>
+<th>HTTP Code</th>
+<th>Response Body</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>200</td>
+<td><code>{ &#39;voted&#39; : true, &#39;election_state&#39; : &#39;running&#39;, &#39;end_date&#39; : &#39;1590298839&#39; }</code></td>
+<td>The only valid election state for voting is <code>running</code>: all other states mean that either voting has not begun yet, or has ended. <code>end_date</code> is the election end date as Unix Epoch (not static - may be changed by the Election Administrator).</td>
+</tr>
+</tbody></table>
 
       </div>
       <div class="dark-box">
