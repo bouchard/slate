@@ -44,7 +44,7 @@ def get_voter_status(secret_key, eid, mid)
 end
 ```
 
-The same endpoint can be used to obtain a voter's status (`{ 'voted' : true|false }`). This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.
+The same endpoint can be used to obtain a voter's status. This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.
 
 Voter status requests use the same parameters as above, but will request a JSON response (header of: `Accept: application/json`).
 
@@ -52,8 +52,6 @@ Voter status requests use the same parameters as above, but will request a JSON 
 
 `GET https://secure.electionbuddy.com/sso?{parameters}` (Header: `Accept: application/json`)
 
-### HTTP Response
-
-* HTTP code: 200
-* Response body: `{ 'voted' : true|false }`
-* Error codes same as above.
+HTTP Code | Response Body | Meaning
+---------- | ------- | ---------
+200 | `{ 'voted' : true, 'election_state' : 'running', 'end_date' : '1590298839' }` | The only valid election state for voting is `running`: all other states mean that either voting has not begun yet, or has ended. `end_date` is the election end date as Unix Epoch (not static - may be changed by the Election Administrator).
