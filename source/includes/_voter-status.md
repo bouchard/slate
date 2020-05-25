@@ -54,4 +54,4 @@ Voter status requests use the same parameters as above, but will request a JSON 
 
 HTTP Code | Response Body | Meaning
 ---------- | ------- | ---------
-200 | `{ 'voted' : true, 'election_state' : 'running', 'end_date' : '1590298839' }` | The only valid election state for voting is `running`: all other states mean that either voting has not begun yet, or has ended. `end_date` is the election end date as Unix Epoch (not static - may be changed by the Election Administrator).
+200 | `{ 'voted' : true, 'election_state' : 'running' }` | The only valid election state for voting is `running`: all other states mean that either voting has not begun yet, or has ended.
