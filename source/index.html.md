@@ -1,5 +1,5 @@
 ---
-title: ElectionBuddy API Documentation
+title: ElectionBuddy Voting Integrations (VI) Documentation
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - ruby
@@ -18,11 +18,13 @@ search: true
 
 # Introduction
 
-Welcome to the SSO API documentation for ElectionBuddy (electionbuddy.com).
+Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com).
 
-# Single Sign-On (SSO)
+# Voter Sign-in
 
 > The function/method below will generate a signed anchor `<a>` element that you can use on your organization's internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization's design or theme. You'll need to pass in `eid`, `exp`, `mid`, and `signature` as appropriate.
+
+## Version 2
 
 ```ruby
 require 'addressable/uri'
@@ -39,7 +41,7 @@ require 'openssl'
 #####
 
 def generate_vote_anchor(secret_key, eid, mid)
-  url = 'https://secure.electionbuddy.com/sso'
+  url = 'https://secure.electionbuddy.com/v1/integrations/sso'
 
   query_values = {
     eid: eid,
@@ -75,7 +77,7 @@ from urllib.parse import urlparse, urlencode
 #####
 
 def generate_vote_anchor(secret_key, eid, mid):
-  url = 'https://secure.electionbuddy.com/sso'
+  url = 'https://secure.electionbuddy.com/v1/integrations/sso'
 
   query_values = {
     'eid' : eid,
@@ -106,7 +108,7 @@ def generate_vote_anchor(secret_key, eid, mid):
 #####
 
 function generate_vote_anchor($secret_key, $eid, $mid) {
-  $url = 'https://secure.electionbuddy.com/sso';
+  $url = 'https://secure.electionbuddy.com/v1/integrations/sso';
 
   $query_values = array(
     'eid' => $eid,
