@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ElectionBuddy API Documentation</title>
+    <title>ElectionBuddy Voting Integrations (VI) Documentation</title>
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i" rel="stylesheet">
-    <style>
+    <style media="screen">
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
 .highlight .gh {
@@ -43,7 +43,7 @@
 .highlight .cs {
   color: #75715e;
 }
-.highlight .c, .highlight .cd {
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
   color: #75715e;
 }
 .highlight .err {
@@ -127,7 +127,7 @@
 .highlight .s1 {
   color: #e6db74;
 }
-.highlight .s {
+.highlight .s, .highlight .sa, .highlight .dl {
   color: #e6db74;
 }
 .highlight .na {
@@ -142,16 +142,13 @@
 .highlight .ne {
   color: #a6e22e;
 }
-.highlight .nf {
+.highlight .nf, .highlight .fm {
   color: #a6e22e;
 }
 .highlight .vc {
   color: #ffffff;
 }
 .highlight .nn {
-  color: #ffffff;
-}
-.highlight .nl {
   color: #ffffff;
 }
 .highlight .ni {
@@ -166,7 +163,7 @@
 .highlight .vi {
   color: #ffffff;
 }
-.highlight .nv {
+.highlight .nv, .highlight .vm {
   color: #ffffff;
 }
 .highlight .w {
@@ -177,6 +174,9 @@
 }
 .highlight .n, .highlight .py, .highlight .nx {
   color: #ffffff;
+}
+.highlight .nl {
+  color: #f92672;
 }
 .highlight .ow {
   color: #f92672;
@@ -197,20 +197,107 @@
   color: #f92672;
 }
     </style>
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
-      <script src="javascripts/all.js"></script>
+    <style media="print">
+      * {
+        -webkit-transition:none!important;
+        transition:none!important;
+      }
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #586e75;
+}
+.highlight .err {
+  color: #002b36;
+  background-color: #dc322f;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+  color: #657b83;
+}
+.highlight .cp {
+  color: #b58900;
+}
+.highlight .nt {
+  color: #b58900;
+}
+.highlight .o, .highlight .ow {
+  color: #93a1a1;
+}
+.highlight .p, .highlight .pi {
+  color: #93a1a1;
+}
+.highlight .gi {
+  color: #859900;
+}
+.highlight .gd {
+  color: #dc322f;
+}
+.highlight .gh {
+  color: #268bd2;
+  background-color: #002b36;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #6c71c4;
+}
+.highlight .kc {
+  color: #cb4b16;
+}
+.highlight .kt {
+  color: #cb4b16;
+}
+.highlight .kd {
+  color: #cb4b16;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #859900;
+}
+.highlight .sa {
+  color: #6c71c4;
+}
+.highlight .sr {
+  color: #2aa198;
+}
+.highlight .si {
+  color: #d33682;
+}
+.highlight .se {
+  color: #d33682;
+}
+.highlight .nn {
+  color: #b58900;
+}
+.highlight .nc {
+  color: #b58900;
+}
+.highlight .no {
+  color: #b58900;
+}
+.highlight .na {
+  color: #268bd2;
+}
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: #859900;
+}
+.highlight .ss {
+  color: #859900;
+}
+    </style>
+    <link href="stylesheets/screen-53f043d8.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-d0fccdda.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-0c8f7524.js"></script>
+
   </head>
 
   <body class="index" data-languages="[&quot;ruby&quot;,&quot;python&quot;,&quot;php&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
-        <img src="images/navbar.png" alt="Navbar" />
+        <img src="images/navbar-cad8cdcb.png" alt="" />
       </span>
     </a>
     <div class="toc-wrapper">
-      <img src="images/logo.png" class="logo" alt="Logo" />
+      <img src="images/logo-9fd6a93b.png" class="logo" alt="" />
         <div class="lang-selector">
               <a href="#" data-language-name="ruby">ruby</a>
               <a href="#" data-language-name="python">python</a>
@@ -225,13 +312,18 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#single-sign-on-sso" class="toc-h1 toc-link" data-title="Single Sign-On (SSO)">Single Sign-On (SSO)</a>
+            <a href="#voter-sign-in" class="toc-h1 toc-link" data-title="Voter Sign-in">Voter Sign-in</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
-                  </li>
-                  <li>
-                    <a href="#query-parameters" class="toc-h2 toc-link" data-title="Query Parameters">Query Parameters</a>
+                    <a href="#version-2" class="toc-h2 toc-link" data-title="Version 2">Version 2</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#http-request" class="toc-h3 toc-link" data-title="HTTP Request">HTTP Request</a>
+                          </li>
+                          <li>
+                            <a href="#query-parameters" class="toc-h3 toc-link" data-title="Query Parameters">Query Parameters</a>
+                          </li>
+                      </ul>
                   </li>
               </ul>
           </li>
@@ -255,12 +347,12 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the SSO API documentation for ElectionBuddy (electionbuddy.com).</p>
-<h1 id='single-sign-on-sso'>Single Sign-On (SSO)</h1>
+<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com).</p>
+<h1 id='voter-sign-in'>Voter Sign-in</h1>
 <blockquote>
 <p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>exp</code>, <code>mid</code>, and <code>signature</code> as appropriate.</p>
 </blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
+<h2 id='version-2'>Version 2</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
 <span class="nb">require</span> <span class="s1">'base64'</span>
 <span class="nb">require</span> <span class="s1">'openssl'</span>
 
@@ -274,7 +366,7 @@
 <span class="c1">#####</span>
 
 <span class="k">def</span> <span class="nf">generate_vote_anchor</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">eid</span><span class="p">,</span> <span class="n">mid</span><span class="p">)</span>
-  <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/sso'</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/v1/integrations/sso'</span>
 
   <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
     <span class="ss">eid: </span><span class="n">eid</span><span class="p">,</span>
@@ -291,51 +383,51 @@
   <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="ss">signature: </span><span class="n">signature</span><span class="p">)</span>
   <span class="s2">"&lt;a href='</span><span class="si">#{</span><span class="n">uri</span><span class="si">}</span><span class="s2">' class='electionbuddy-vote-button'&gt;Vote now&lt;/a&gt;"</span>
 <span class="k">end</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">base64</span>
+</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">hmac</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">urlencode</span>
 
-<span class="c">##### Example values:</span>
-
-<span class="c"># eid = '12'</span>
-<span class="c"># mid = 'jane@example.com'</span>
-<span class="c"># secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
-<span class="c"># (Contact support to obtain `secret_key`)</span>
-
-<span class="c">#####</span>
-
-<span class="k">def</span> <span class="nf">generate_vote_anchor</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">eid</span><span class="p">,</span> <span class="n">mid</span><span class="p">):</span>
-  <span class="n">url</span> <span class="o">=</span> <span class="s">'https://secure.electionbuddy.com/sso'</span>
-
-  <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">'eid'</span> <span class="p">:</span> <span class="n">eid</span><span class="p">,</span>
-    <span class="s">'exp'</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()),</span>
-    <span class="s">'mid'</span> <span class="p">:</span> <span class="n">mid</span>
-  <span class="p">}</span>
-
-  <span class="n">message</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_values</span><span class="p">)</span>
-  <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span>
-    <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
-  <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-  <span class="n">query_values</span><span class="p">[</span><span class="s">'signature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">signature</span>
-  <span class="n">message</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_values</span><span class="p">)</span>
-  <span class="n">uri</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s">'?'</span> <span class="o">+</span> <span class="n">message</span>
-  <span class="k">return</span> <span class="s">"&lt;a href='"</span> <span class="o">+</span> <span class="n">uri</span> <span class="o">+</span> <span class="s">"' class='electionbuddy-vote-button'&gt;Vote now&lt;/a&gt;"</span>
-</code></pre><pre class="highlight php tab-php"><code><span class="cp">&lt;?</span>
-
 <span class="c1">##### Example values:
 </span>
-<span class="c1"># $eid = '12'
-# $mid = 'jane@example.com'
-# $secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
+<span class="c1"># eid = '12'
+# mid = 'jane@example.com'
+# secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
 # (Contact support to obtain `secret_key`)
 </span>
 <span class="c1">#####
 </span>
-<span class="k">function</span> <span class="nf">generate_vote_anchor</span><span class="p">(</span><span class="nv">$secret_key</span><span class="p">,</span> <span class="nv">$eid</span><span class="p">,</span> <span class="nv">$mid</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nv">$url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/sso'</span><span class="p">;</span>
+<span class="k">def</span> <span class="nf">generate_vote_anchor</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">eid</span><span class="p">,</span> <span class="n">mid</span><span class="p">):</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s">'https://secure.electionbuddy.com/v1/integrations/sso'</span>
+
+  <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'eid'</span> <span class="p">:</span> <span class="n">eid</span><span class="p">,</span>
+    <span class="s">'exp'</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()),</span>
+    <span class="s">'mid'</span> <span class="p">:</span> <span class="n">mid</span>
+  <span class="p">}</span>
+
+  <span class="n">message</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_values</span><span class="p">)</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span>
+    <span class="n">hmac</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret_key</span><span class="p">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">message</span><span class="p">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">).</span><span class="n">digest</span><span class="p">()</span>
+  <span class="p">).</span><span class="n">decode</span><span class="p">()</span>
+  <span class="n">query_values</span><span class="p">[</span><span class="s">'signature'</span><span class="p">]</span> <span class="o">=</span> <span class="n">signature</span>
+  <span class="n">message</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_values</span><span class="p">)</span>
+  <span class="n">uri</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s">'?'</span> <span class="o">+</span> <span class="n">message</span>
+  <span class="k">return</span> <span class="s">"&lt;a href='"</span> <span class="o">+</span> <span class="n">uri</span> <span class="o">+</span> <span class="s">"' class='electionbuddy-vote-button'&gt;Vote now&lt;/a&gt;"</span>
+</code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="cp">&lt;?</span>
+
+<span class="c1">##### Example values:</span>
+
+<span class="c1"># $eid = '12'</span>
+<span class="c1"># $mid = 'jane@example.com'</span>
+<span class="c1"># $secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
+<span class="c1"># (Contact support to obtain `secret_key`)</span>
+
+<span class="c1">#####</span>
+
+<span class="k">function</span> <span class="n">generate_vote_anchor</span><span class="p">(</span><span class="nv">$secret_key</span><span class="p">,</span> <span class="nv">$eid</span><span class="p">,</span> <span class="nv">$mid</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/v1/integrations/sso'</span><span class="p">;</span>
 
   <span class="nv">$query_values</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">'eid'</span> <span class="o">=&gt;</span> <span class="nv">$eid</span><span class="p">,</span>
@@ -347,13 +439,13 @@
   <span class="nv">$signature</span> <span class="o">=</span> <span class="nb">strtr</span><span class="p">(</span><span class="nb">base64_encode</span><span class="p">(</span><span class="nb">hash_hmac</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="nv">$message</span><span class="p">,</span> <span class="nv">$secret_key</span><span class="p">,</span> <span class="kc">true</span><span class="p">)),</span> <span class="s1">'+/'</span><span class="p">,</span> <span class="s1">'-_'</span><span class="p">);</span>
   <span class="nv">$query_values</span><span class="p">[</span><span class="s1">'signature'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$signature</span><span class="p">;</span>
   <span class="nv">$message</span> <span class="o">=</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$query_values</span><span class="p">);</span>
-  <span class="nv">$uri</span> <span class="o">=</span> <span class="nv">$url</span> <span class="o">.</span> <span class="s1">'?'</span> <span class="o">.</span> <span class="nv">$message</span><span class="p">;</span>
+  <span class="nv">$uri</span> <span class="o">=</span> <span class="nv">$url</span> <span class="mf">.</span> <span class="s1">'?'</span> <span class="mf">.</span> <span class="nv">$message</span><span class="p">;</span>
 
-  <span class="k">return</span> <span class="p">(</span><span class="s2">"&lt;a href='"</span> <span class="o">.</span> <span class="nv">$uri</span> <span class="o">.</span> <span class="s2">"' class='electionbuddy-vote-button'&gt;Vote now&lt;/a&gt;"</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span><span class="s2">"&lt;a href='"</span> <span class="mf">.</span> <span class="nv">$uri</span> <span class="mf">.</span> <span class="s2">"' class='electionbuddy-vote-button'&gt;Vote now&lt;/a&gt;"</span><span class="p">);</span>
 
 <span class="p">}</span>
 <span class="cp">?&gt;</span>
-</code></pre>
+</code></pre></div>
 <p>This endpoint authenticates a voting request for a particular user (for example, from your organization&#39;s internal dashboard). If the signature is valid and the voter (identified by <code>mid</code>) has yet to vote, they will be forwarded to a fresh ballot for the election <code>eid</code>.</p>
 <h3 id='http-request'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/sso?{parameters}</code></p>
@@ -413,7 +505,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <blockquote>
 <p>Below is an example request to obtain voter status:</p>
 </blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'net/http'</span>
+<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'net/http'</span>
 <span class="nb">require</span> <span class="s1">'addressable/uri'</span>
 <span class="nb">require</span> <span class="s1">'base64'</span>
 <span class="nb">require</span> <span class="s1">'openssl'</span>
@@ -452,7 +544,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
   <span class="n">response</span> <span class="o">=</span> <span class="n">net</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span><span class="n">uri</span><span class="p">.</span><span class="nf">path</span><span class="p">,</span> <span class="n">uri</span><span class="p">.</span><span class="nf">query</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
   <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
 <span class="k">end</span>
-</code></pre>
+</code></pre></div>
 <p>The same endpoint can be used to obtain a voter&#39;s status. This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.</p>
 
 <p>Voter status requests use the same parameters as above, but will request a JSON response (header of: <code>Accept: application/json</code>).</p>
