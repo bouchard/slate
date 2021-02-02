@@ -24,7 +24,7 @@ Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electio
 
 > The function/method below will generate a signed anchor `<a>` element that you can use on your organization's internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization's design or theme. You'll need to pass in `eid`, `exp`, `mid`, and `signature` as appropriate.
 
-## Version 2
+## Version 2 Testing
 
 ```ruby
 require 'addressable/uri'
