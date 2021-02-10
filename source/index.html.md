@@ -18,9 +18,9 @@ search: true
 
 # Introduction
 
-Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our current (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.
+Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our in-development (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.
 
-# Current (Version 2)
+# In Development (Version 2)
 
 > The function/method below will return either either HTML or a JSON list of elections that the current voter is eligible to vote in. It will return all `Elections` belonging to an `Organization`, **including** sister `Organization`s (i.e. sharing the same `BillingAccount`).
 
@@ -36,9 +36,7 @@ Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electio
 # TODO
 ```
 
-<aside class="notice">
-Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
-</aside>
+Version 2 documentation is in progress and will be published here once our V2 Voting Integrations are generally available.
 
 # Legacy (Version 1)
 
