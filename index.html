@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ElectionBuddy Voting Integrations (VI) Documentation</title>
+    <title>Voting Integrations (VI) Documentation</title>
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i" rel="stylesheet">
     <style media="screen">
@@ -283,9 +283,9 @@
   color: #859900;
 }
     </style>
-    <link href="stylesheets/screen-53f043d8.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/screen-082e5882.css" rel="stylesheet" media="screen" />
     <link href="stylesheets/print-d0fccdda.css" rel="stylesheet" media="print" />
-      <script src="javascripts/all-0c8f7524.js"></script>
+      <script src="javascripts/all-e033bdd3.js"></script>
 
   </head>
 
@@ -297,7 +297,7 @@
       </span>
     </a>
     <div class="toc-wrapper">
-      <img src="images/logo-9fd6a93b.png" class="logo" alt="" />
+      <img src="images/logo-567d73fb.png" class="logo" alt="" />
         <div class="lang-selector">
               <a href="#" data-language-name="ruby">ruby</a>
               <a href="#" data-language-name="python">python</a>
@@ -312,18 +312,16 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#voter-sign-in" class="toc-h1 toc-link" data-title="Voter Sign-in">Voter Sign-in</a>
+            <a href="#current-version-2" class="toc-h1 toc-link" data-title="Current (Version 2)">Current (Version 2)</a>
+          </li>
+          <li>
+            <a href="#legacy-version-1" class="toc-h1 toc-link" data-title="Legacy (Version 1)">Legacy (Version 1)</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#version-2-testing" class="toc-h2 toc-link" data-title="Version 2 Testing">Version 2 Testing</a>
-                      <ul class="toc-list-h3">
-                          <li>
-                            <a href="#http-request" class="toc-h3 toc-link" data-title="HTTP Request">HTTP Request</a>
-                          </li>
-                          <li>
-                            <a href="#query-parameters" class="toc-h3 toc-link" data-title="Query Parameters">Query Parameters</a>
-                          </li>
-                      </ul>
+                    <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
+                  </li>
+                  <li>
+                    <a href="#query-parameters" class="toc-h2 toc-link" data-title="Query Parameters">Query Parameters</a>
                   </li>
               </ul>
           </li>
@@ -347,12 +345,23 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com).</p>
-<h1 id='voter-sign-in'>Voter Sign-in</h1>
+<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our current (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
+<h1 id='current-version-2'>Current (Version 2)</h1>
+<blockquote>
+<p>The function/method below will return either either HTML or a JSON list of elections that the current voter is eligible to vote in. It will return all <code>Elections</code> belonging to an <code>Organization</code>, <strong>including</strong> sister <code>Organization</code>s (i.e. sharing the same <code>BillingAccount</code>).</p>
+</blockquote>
+<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="c1"># TODO</span>
+</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="c1"># TODO
+</span></code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="c1"># TODO</span>
+</code></pre></div>
+<aside class="notice">
+Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
+</aside>
+<h1 id='legacy-version-1'>Legacy (Version 1)</h1>
 <blockquote>
 <p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>exp</code>, <code>mid</code>, and <code>signature</code> as appropriate.</p>
 </blockquote>
-<h2 id='version-2-testing'>Version 2 Testing</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
+<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
 <span class="nb">require</span> <span class="s1">'base64'</span>
 <span class="nb">require</span> <span class="s1">'openssl'</span>
 
@@ -366,7 +375,7 @@
 <span class="c1">#####</span>
 
 <span class="k">def</span> <span class="nf">generate_vote_anchor</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">eid</span><span class="p">,</span> <span class="n">mid</span><span class="p">)</span>
-  <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/v1/integrations/sso'</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/integrations/v1/sso'</span>
 
   <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
     <span class="ss">eid: </span><span class="n">eid</span><span class="p">,</span>
@@ -399,7 +408,7 @@
 <span class="c1">#####
 </span>
 <span class="k">def</span> <span class="nf">generate_vote_anchor</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">eid</span><span class="p">,</span> <span class="n">mid</span><span class="p">):</span>
-  <span class="n">url</span> <span class="o">=</span> <span class="s">'https://secure.electionbuddy.com/v1/integrations/sso'</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s">'https://secure.electionbuddy.com/integrations/v1/sso'</span>
 
   <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">'eid'</span> <span class="p">:</span> <span class="n">eid</span><span class="p">,</span>
@@ -427,7 +436,7 @@
 <span class="c1">#####</span>
 
 <span class="k">function</span> <span class="n">generate_vote_anchor</span><span class="p">(</span><span class="nv">$secret_key</span><span class="p">,</span> <span class="nv">$eid</span><span class="p">,</span> <span class="nv">$mid</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nv">$url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/v1/integrations/sso'</span><span class="p">;</span>
+  <span class="nv">$url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/integrations/v1/sso'</span><span class="p">;</span>
 
   <span class="nv">$query_values</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">'eid'</span> <span class="o">=&gt;</span> <span class="nv">$eid</span><span class="p">,</span>
@@ -448,7 +457,7 @@
 </code></pre></div>
 <p>This endpoint authenticates a voting request for a particular user (for example, from your organization&#39;s internal dashboard). If the signature is valid and the voter (identified by <code>mid</code>) has yet to vote, they will be forwarded to a fresh ballot for the election <code>eid</code>.</p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>GET https://secure.electionbuddy.com/sso?{parameters}</code></p>
+<p><code>GET https://secure.electionbuddy.com/integrations/v1/sso?{parameters}</code></p>
 <h3 id='query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
