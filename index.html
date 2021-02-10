@@ -312,7 +312,7 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#current-version-2" class="toc-h1 toc-link" data-title="Current (Version 2)">Current (Version 2)</a>
+            <a href="#in-development-version-2" class="toc-h1 toc-link" data-title="In Development (Version 2)">In Development (Version 2)</a>
           </li>
           <li>
             <a href="#legacy-version-1" class="toc-h1 toc-link" data-title="Legacy (Version 1)">Legacy (Version 1)</a>
@@ -345,8 +345,8 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our current (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
-<h1 id='current-version-2'>Current (Version 2)</h1>
+<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our in-development (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
+<h1 id='in-development-version-2'>In Development (Version 2)</h1>
 <blockquote>
 <p>The function/method below will return either either HTML or a JSON list of elections that the current voter is eligible to vote in. It will return all <code>Elections</code> belonging to an <code>Organization</code>, <strong>including</strong> sister <code>Organization</code>s (i.e. sharing the same <code>BillingAccount</code>).</p>
 </blockquote>
@@ -354,9 +354,7 @@
 </code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="c1"># TODO
 </span></code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="c1"># TODO</span>
 </code></pre></div>
-<aside class="notice">
-Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
-</aside>
+<p>Version 2 documentation is in progress and will be published here once our V2 Voting Integrations are generally available.</p>
 <h1 id='legacy-version-1'>Legacy (Version 1)</h1>
 <blockquote>
 <p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>exp</code>, <code>mid</code>, and <code>signature</code> as appropriate.</p>
