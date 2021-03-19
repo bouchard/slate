@@ -22,10 +22,47 @@ Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electio
 
 # In Development (Version 2)
 
-> The function/method below will return either either HTML or a JSON list of elections that the current voter is eligible to vote in. It will return all `Elections` belonging to an `Organization`, **including** sister `Organization`s (i.e. sharing the same `BillingAccount`).
+> The function/method below will return templated HTML in the form of a `<ul>` list of elections that the current voter is eligible to vote in. It will search all `Elections` belonging to an `Organization`, **including** sister `Organization`s (i.e. sharing the same `BillingAccount`).
 
 ```ruby
-# TODO
+require 'addressable/uri'
+require 'base64'
+require 'openssl'
+require 'faraday'
+
+#####
+
+# Parameters:
+# `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)
+# `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
+# `identifier` - the Voter's identifier for which to search for eligible elections
+# (Contact support to obtain `secret_key`)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier).
+#
+# Returns:
+# JSON: (Content-Type: 'application/json' (or '.json' added to endpoint URL)
+# -> {}
+
+#####
+
+def get_election_list(oid, exp, identifier, secret_token)
+  url = 'https://secure.electionbuddy.com/integrations/v2/elections'
+
+  query_values = {
+    oid: oid,
+    exp: Time.now.to_i,
+    identifier: identifier
+  }
+
+  uri = Addressable::URI.parse(url)
+  uri.query_values = query_values
+  message = uri.query
+  signature = Base64.urlsafe_encode64(
+    OpenSSL::HMAC.digest('sha256', secret_token, message)
+  )
+  uri.query_values = query_values.merge(signature: signature)
+  Faraday.get(uri).body
+end
 ```
 
 ```python
