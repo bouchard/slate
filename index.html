@@ -348,9 +348,46 @@
 <p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our in-development (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
 <h1 id='in-development-version-2'>In Development (Version 2)</h1>
 <blockquote>
-<p>The function/method below will return either either HTML or a JSON list of elections that the current voter is eligible to vote in. It will return all <code>Elections</code> belonging to an <code>Organization</code>, <strong>including</strong> sister <code>Organization</code>s (i.e. sharing the same <code>BillingAccount</code>).</p>
+<p>The function/method below will return templated HTML in the form of a <code>&lt;ul&gt;</code> list of elections that the current voter is eligible to vote in. It will search all <code>Elections</code> belonging to an <code>Organization</code>, <strong>including</strong> sister <code>Organization</code>s (i.e. sharing the same <code>BillingAccount</code>).</p>
 </blockquote>
-<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="c1"># TODO</span>
+<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
+<span class="nb">require</span> <span class="s1">'base64'</span>
+<span class="nb">require</span> <span class="s1">'openssl'</span>
+<span class="nb">require</span> <span class="s1">'faraday'</span>
+
+<span class="c1">#####</span>
+
+<span class="c1"># Parameters:</span>
+<span class="c1"># `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)</span>
+<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)</span>
+<span class="c1"># `identifier` - the Voter's identifier for which to search for eligible elections</span>
+<span class="c1"># (Contact support to obtain `secret_key`)</span>
+<span class="c1"># `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier).</span>
+<span class="c1">#</span>
+<span class="c1"># Returns:</span>
+<span class="c1"># JSON: (Content-Type: 'application/json' (or '.json' added to endpoint URL)</span>
+<span class="c1"># -&gt; {}</span>
+
+<span class="c1">#####</span>
+
+<span class="k">def</span> <span class="nf">get_election_list</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">secret_token</span><span class="p">)</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/integrations/v2/elections'</span>
+
+  <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">oid: </span><span class="n">oid</span><span class="p">,</span>
+    <span class="ss">exp: </span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span>
+    <span class="ss">identifier: </span><span class="n">identifier</span>
+  <span class="p">}</span>
+
+  <span class="n">uri</span> <span class="o">=</span> <span class="no">Addressable</span><span class="o">::</span><span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+  <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span>
+  <span class="n">message</span> <span class="o">=</span> <span class="n">uri</span><span class="p">.</span><span class="nf">query</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="no">Base64</span><span class="p">.</span><span class="nf">urlsafe_encode64</span><span class="p">(</span>
+    <span class="no">OpenSSL</span><span class="o">::</span><span class="no">HMAC</span><span class="p">.</span><span class="nf">digest</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="n">secret_token</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="p">)</span>
+  <span class="n">uri</span><span class="p">.</span><span class="nf">query_values</span> <span class="o">=</span> <span class="n">query_values</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="ss">signature: </span><span class="n">signature</span><span class="p">)</span>
+  <span class="no">Faraday</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">uri</span><span class="p">).</span><span class="nf">body</span>
+<span class="k">end</span>
 </code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="c1"># TODO
 </span></code></pre></div><div class="highlight"><pre class="highlight php tab-php"><code><span class="c1"># TODO</span>
 </code></pre></div>
