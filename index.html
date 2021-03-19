@@ -312,16 +312,24 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#in-development-version-2" class="toc-h1 toc-link" data-title="In Development (Version 2)">In Development (Version 2)</a>
-          </li>
-          <li>
-            <a href="#legacy-version-1" class="toc-h1 toc-link" data-title="Legacy (Version 1)">Legacy (Version 1)</a>
+            <a href="#current-version-2" class="toc-h1 toc-link" data-title="Current (Version 2)">Current (Version 2)</a>
               <ul class="toc-list-h2">
                   <li>
                     <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
                   </li>
                   <li>
                     <a href="#query-parameters" class="toc-h2 toc-link" data-title="Query Parameters">Query Parameters</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#legacy-version-1" class="toc-h1 toc-link" data-title="Legacy (Version 1)">Legacy (Version 1)</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#http-request-2" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
+                  </li>
+                  <li>
+                    <a href="#query-parameters-2" class="toc-h2 toc-link" data-title="Query Parameters">Query Parameters</a>
                   </li>
               </ul>
           </li>
@@ -346,7 +354,7 @@
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
 <p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our in-development (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
-<h1 id='in-development-version-2'>In Development (Version 2)</h1>
+<h1 id='current-version-2'>Current (Version 2)</h1>
 <blockquote>
 <p>The function/method below will return templated HTML in the form of a <code>&lt;ul&gt;</code> list of elections that the current voter is eligible to vote in. It will search all <code>Elections</code> belonging to an <code>Organization</code>, <strong>including</strong> sister <code>Organization</code>s (i.e. sharing the same <code>BillingAccount</code>).</p>
 </blockquote>
@@ -373,9 +381,9 @@
   <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/integrations/v2/elections'</span>
 
   <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="ss">oid: </span><span class="n">oid</span><span class="p">,</span>
     <span class="ss">exp: </span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span>
-    <span class="ss">identifier: </span><span class="n">identifier</span>
+    <span class="ss">identifier: </span><span class="n">identifier</span><span class="p">,</span>
+    <span class="ss">oid: </span><span class="n">oid</span>
   <span class="p">}</span>
 
   <span class="n">uri</span> <span class="o">=</span> <span class="no">Addressable</span><span class="o">::</span><span class="no">URI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -412,9 +420,9 @@
   <span class="n">url</span> <span class="o">=</span> <span class="s">'https://secure.electionbuddy.com/integrations/v2/elections'</span>
 
   <span class="n">query_values</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">'oid'</span> <span class="p">:</span> <span class="n">oid</span><span class="p">,</span>
     <span class="s">'exp'</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()),</span>
-    <span class="s">'identifier'</span> <span class="p">:</span> <span class="n">identifier</span>
+    <span class="s">'identifier'</span> <span class="p">:</span> <span class="n">identifier</span><span class="p">,</span>
+    <span class="s">'oid'</span> <span class="p">:</span> <span class="n">oid</span>
   <span class="p">}</span>
 
   <span class="n">message</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query_values</span><span class="p">)</span>
@@ -445,9 +453,9 @@
   <span class="nv">$url</span> <span class="o">=</span> <span class="s1">'https://secure.electionbuddy.com/integrations/v2/elections'</span><span class="p">;</span>
 
   <span class="nv">$query_values</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">'oid'</span> <span class="o">=&gt;</span> <span class="nv">$oid</span><span class="p">,</span>
     <span class="s1">'exp'</span> <span class="o">=&gt;</span> <span class="nb">time</span><span class="p">(),</span>
-    <span class="s1">'identifier'</span> <span class="o">=&gt;</span> <span class="nv">$identifier</span>
+    <span class="s1">'identifier'</span> <span class="o">=&gt;</span> <span class="nv">$identifier</span><span class="p">,</span>
+    <span class="s1">'oid'</span> <span class="o">=&gt;</span> <span class="nv">$oid</span>
   <span class="p">);</span>
 
   <span class="nv">$message</span> <span class="o">=</span> <span class="nb">http_build_query</span><span class="p">(</span><span class="nv">$query_values</span><span class="p">);</span>
@@ -461,7 +469,43 @@
 <span class="p">}</span>
 <span class="cp">?&gt;</span>
 </code></pre></div>
-<p>Version 2 documentation is in progress and will be published here once our V2 Voting Integrations are generally available.</p>
+<p>This endpoint authenticates a voting request for a particular organization. If the signature is valid and the voter (identified by <code>identifier</code>) has yet to vote in any elections they are eligible to vote in, we will return an HTML list (<code>&lt;ul&gt;</code>) with links to vote.</p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>GET https://secure.electionbuddy.com/integrations/v2/elections?{parameters}</code></p>
+<h3 id='query-parameters'>Query Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>exp</td>
+<td>Request expiration date, in <a href="https://www.epochconverter.com/">Unix Epoch Time</a>. This time must be +/- 5 minutes from the time the request is received. If <code>exp</code> is older than 5 minutes, the voter will be directed to a &quot;Link Expired&quot; page.</td>
+</tr>
+<tr>
+<td>identifier</td>
+<td>Member ID: A unique identifier for the member who is voting, such as an email address, or the <code>identifier</code> when you uploaded your voter details for an election.</td>
+</tr>
+<tr>
+<td>oid</td>
+<td>Your Organization&#39;s ID (available from https://secure.electionbuddy.com/organizations)</td>
+</tr>
+<tr>
+<td>signature</td>
+<td>Generated signature using <code>secret_token</code>. See below.</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>All requests must be signed by <code>signature</code> <strong>appended</strong> (as the last parameter) to the query string, and generated from the formatted query string consisting of <code>oid</code>, <code>exp</code>, and <code>identifier</code>.</li>
+<li>Signatures must be generated using HMAC-SHA256 using the <code>secret_token</code> for your Organization in your <a href="https://secure.electionbuddy.com/organizations">ElectionBuddy account</a>.</li>
+<li>All other parameters should appear <strong>alphabetically</strong> in the query string (i.e. <code>exp</code>, <code>identifier</code>, <code>oid</code>).</li>
+</ul>
+
+<aside class="notice">
+Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
+</aside>
 <h1 id='legacy-version-1'>Legacy (Version 1)</h1>
 <blockquote>
 <p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>exp</code>, <code>mid</code>, and <code>signature</code> as appropriate.</p>
@@ -561,9 +605,9 @@
 <span class="cp">?&gt;</span>
 </code></pre></div>
 <p>This endpoint authenticates a voting request for a particular user (for example, from your organization&#39;s internal dashboard). If the signature is valid and the voter (identified by <code>mid</code>) has yet to vote, they will be forwarded to a fresh ballot for the election <code>eid</code>.</p>
-<h3 id='http-request'>HTTP Request</h3>
+<h3 id='http-request-2'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/integrations/v1/sso?{parameters}</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<h3 id='query-parameters-2'>Query Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
