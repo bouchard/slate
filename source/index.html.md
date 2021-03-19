@@ -20,7 +20,7 @@ search: true
 
 Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our in-development (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.
 
-# In Development (Version 2)
+# Current (Version 2)
 
 > The function/method below will return templated HTML in the form of a `<ul>` list of elections that the current voter is eligible to vote in. It will search all `Elections` belonging to an `Organization`, **including** sister `Organization`s (i.e. sharing the same `BillingAccount`).
 
@@ -36,12 +36,11 @@ require 'faraday'
 # `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)
 # `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
 # `identifier` - the Voter's identifier for which to search for eligible elections
-# (Contact support to obtain `secret_key`)
-# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier).
+# `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier)
 #
-# Returns:
-# JSON: (Content-Type: 'application/json' (or '.json' added to endpoint URL)
-# -> {}
+# Returns HTML:
+#
 
 #####
 
@@ -49,9 +48,9 @@ def get_election_list(oid, exp, identifier, secret_token)
   url = 'https://secure.electionbuddy.com/integrations/v2/elections'
 
   query_values = {
-    oid: oid,
     exp: Time.now.to_i,
-    identifier: identifier
+    identifier: identifier,
+    oid: oid
   }
 
   uri = Addressable::URI.parse(url)
@@ -66,14 +65,107 @@ end
 ```
 
 ```python
-# TODO
+import base64
+import hashlib
+import hmac
+import time
+import requests
+from urllib.parse import urlparse, urlencode
+
+#####
+
+# Parameters:
+# `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)
+# `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
+# `identifier` - the Voter's identifier for which to search for eligible elections
+# `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier)
+#
+# Returns HTML:
+#
+
+#####
+
+def get_election_list(oid, exp, identifier, secret_token):
+  url = 'https://secure.electionbuddy.com/integrations/v2/elections'
+
+  query_values = {
+    'exp' : int(time.time()),
+    'identifier' : identifier,
+    'oid' : oid
+  }
+
+  message = urlencode(query_values)
+  signature = base64.urlsafe_b64encode(
+    hmac.new(secret_token.encode(), message.encode(), hashlib.sha256).digest()
+  ).decode()
+  query_values['signature'] = signature
+  message = urlencode(query_values)
+  uri = url + '?' + message
+  return requests.get(uri).content
 ```
 
 ```php
-# TODO
+<?
+
+#####
+
+# Parameters:
+# `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)
+# `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
+# `identifier` - the Voter's identifier for which to search for eligible elections
+# `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier)
+#
+# Returns HTML:
+#
+
+#####
+
+function get_election_list($oid, $exp, $identifier, $secret_token) {
+  $url = 'https://secure.electionbuddy.com/integrations/v2/elections';
+
+  $query_values = array(
+    'exp' => time(),
+    'identifier' => $identifier,
+    'oid' => $oid
+  );
+
+  $message = http_build_query($query_values);
+  $signature = strtr(base64_encode(hash_hmac('sha256', $message, $secret_token, true)), '+/', '-_');
+  $query_values['signature'] = $signature;
+  $message = http_build_query($query_values);
+  $uri = $url . '?' . $message;
+
+  return file_get_contents($uri);
+
+}
+?>
 ```
 
-Version 2 documentation is in progress and will be published here once our V2 Voting Integrations are generally available.
+This endpoint authenticates a voting request for a particular organization. If the signature is valid and the voter (identified by `identifier`) has yet to vote in any elections they are eligible to vote in, we will return an HTML list (`<ul>`) with links to vote.
+
+### HTTP Request
+
+`GET https://secure.electionbuddy.com/integrations/v2/elections?{parameters}`
+
+### Query Parameters
+
+Parameter | Description
+--------- | -----------
+exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). This time must be +/- 5 minutes from the time the request is received. If `exp` is older than 5 minutes, the voter will be directed to a "Link Expired" page.
+identifier | Member ID: A unique identifier for the member who is voting, such as an email address, or the `identifier` when you uploaded your voter details for an election.
+oid | Your Organization's ID (available from https://secure.electionbuddy.com/organizations)
+signature | Generated signature using `secret_token`. See below.
+
+* All requests must be signed by `signature` **appended** (as the last parameter) to the query string, and generated from the formatted query string consisting of `oid`, `exp`, and `identifier`.
+* Signatures must be generated using HMAC-SHA256 using the `secret_token` for your Organization in your [ElectionBuddy account](https://secure.electionbuddy.com/organizations).
+* All other parameters should appear **alphabetically** in the query string (i.e. `exp`, `identifier`, `oid`).
+
+<aside class="notice">
+Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
+</aside>
+
 
 # Legacy (Version 1)
 
