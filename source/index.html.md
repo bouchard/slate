@@ -18,7 +18,9 @@ search: true
 
 # Introduction
 
-Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our in-development (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.
+Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our current (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.
+
+**V1** focused on providing you with a method to generate a signed URL to send your voters to a specific election. **V2** expands on this by allowing you to give your voters a list of all running elections in which they are eligible to vote, and allowing them to vote in any or all of them in turn while being authenticated behind your customer portal.
 
 # Current (Version 2)
 
@@ -37,7 +39,7 @@ require 'faraday'
 # `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
 # `identifier` - the Voter's identifier for which to search for eligible elections
 # `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
-# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)
 #
 # Returns HTML:
 #
@@ -79,7 +81,7 @@ from urllib.parse import urlparse, urlencode
 # `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
 # `identifier` - the Voter's identifier for which to search for eligible elections
 # `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
-# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)
 #
 # Returns HTML:
 #
@@ -115,7 +117,7 @@ def get_election_list(oid, exp, identifier, secret_token):
 # `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
 # `identifier` - the Voter's identifier for which to search for eligible elections
 # `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
-# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (oid, exp, identifier)
+# `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)
 #
 # Returns HTML:
 #
@@ -145,6 +147,8 @@ function get_election_list($oid, $exp, $identifier, $secret_token) {
 
 This endpoint authenticates a voting request for a particular organization. If the signature is valid and the voter (identified by `identifier`) has yet to vote in any elections they are eligible to vote in, we will return an HTML list (`<ul>`) with links to vote.
 
+***It is very important that the voter identifiers you use (for example, membership number) are consistent across any elections your organization(s) may run. The list this endpoint presents to voters is based on a search by identifier &mdash; if, for example, identifier `123456` represents Voter A in one election, and Voter B in another, that will allow either Voter A or B to vote for each other in both elections. You almost certainly do not want this! Please ensure your voter identifiers are globally unique.***
+
 ### HTTP Request
 
 `GET https://secure.electionbuddy.com/integrations/v2/elections?{parameters}`
@@ -153,7 +157,7 @@ This endpoint authenticates a voting request for a particular organization. If t
 
 Parameter | Description
 --------- | -----------
-exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). This time must be +/- 5 minutes from the time the request is received. If `exp` is older than 5 minutes, the voter will be directed to a "Link Expired" page.
+exp | Request expiration date, in [Unix Epoch Time](https://www.epochconverter.com/). This time must be +/- 30 seconds from the time the request is received.
 identifier | Member ID: A unique identifier for the member who is voting, such as an email address, or the `identifier` when you uploaded your voter details for an election.
 oid | Your Organization's ID (available from https://secure.electionbuddy.com/organizations)
 signature | Generated signature using `secret_token`. See below.
