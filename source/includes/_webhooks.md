@@ -56,8 +56,10 @@ If the given event has not happened, the value will be `null`.
 
 ## Voter Choices
 
-If your Voter Anonymity settings allow administrators to view voiter choices,
-then voter choices will be included in the payload
+If your Voter Anonymity settings allow administrators to view voter choices,
+then voter choices will be included in the payload.
+
+![radio buttons offering three choices: Secret Ballot, Poll, and Show of Hands](voter-choices.png)
 
 ```json
 {
