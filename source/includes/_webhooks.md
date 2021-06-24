@@ -5,9 +5,18 @@ requests corresponding to events related to your vote(s). For example, when
 individual votes are recorded.
 
 The URL is configured through the Electionbuddy website, if enabled on your
-account.
+account. To enable webhooks contact an Electionbuddy customer support
+representative.
 
-To enable webhooks contact an Electionbuddy customer support representative.
+Once enabled, individual webhooks can be enabled for all elections, or enabled or disabled
+on an election-by-election basis, in the organization settings.
+
+![a UI for configuring overall webhook settings](webhook-organization-settings.png)
+
+If enabled on an election-by-election basis, the webhooks can be configured on
+the voter list section fo the vote setup.
+
+![a UI for configuring webhook settings for a single vote](webhook-vote-settings.png)
 
 ## Payload Overview
 
