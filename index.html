@@ -312,27 +312,24 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#current-version-2" class="toc-h1 toc-link" data-title="Current (Version 2)">Current (Version 2)</a>
+            <a href="#version-2" class="toc-h1 toc-link" data-title="Version 2">Version 2</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#eligible-election-list-widget" class="toc-h2 toc-link" data-title="Eligible Election List Widget">Eligible Election List Widget</a>
+                    <a href="#version-2-running-elections-list-widget" class="toc-h2 toc-link" data-title="Running Elections List Widget">Running Elections List Widget</a>
                   </li>
                   <li>
-                    <a href="#voter-status" class="toc-h2 toc-link" data-title="Voter Status">Voter Status</a>
+                    <a href="#version-2-voter-status" class="toc-h2 toc-link" data-title="Voter Status">Voter Status</a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#legacy-version-1" class="toc-h1 toc-link" data-title="Legacy (Version 1)">Legacy (Version 1)</a>
+            <a href="#version-1" class="toc-h1 toc-link" data-title="Version 1">Version 1</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
+                    <a href="#version-1-election-widget" class="toc-h2 toc-link" data-title="Election Widget">Election Widget</a>
                   </li>
                   <li>
-                    <a href="#query-parameters" class="toc-h2 toc-link" data-title="Query Parameters">Query Parameters</a>
-                  </li>
-                  <li>
-                    <a href="#voter-status" class="toc-h2 toc-link" data-title="Voter Status">Voter Status</a>
+                    <a href="#version-1-voter-status" class="toc-h2 toc-link" data-title="Voter Status">Voter Status</a>
                   </li>
               </ul>
           </li>
@@ -348,12 +345,14 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our legacy (version 1, or V1) integrations, as well our current (version 2, or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
+<p>Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electionbuddy.com). We continue to maintain both our version 1 (or V1) integrations, as well our version 2 (or V2) voting integrations to allow your voters to authenticate with ElectionBuddy within your own member or customer portal or customer relationship management (CRM) software.</p>
 
-<p><strong>V1</strong> focused on providing you with a method to generate a signed URL to send your voters to a specific election. <strong>V2</strong> expands on this by allowing you to give your voters a list of all running elections in which they are eligible to vote, and allowing them to vote in any or all of them in turn while being authenticated behind your customer portal.</p>
-<h1 id='current-version-2'>Current (Version 2)</h1><h2 id='eligible-election-list-widget'>Eligible Election List Widget</h2>
+<p><strong>V1</strong> focuses on providing you with a method to generate a signed URL to send your voters to a specific election.</p>
+
+<p><strong>V2</strong> expands on this by allowing you to give your voters a list of all running elections in which they are eligible to vote, and allowing them to vote in any or all of them in turn while being authenticated behind your customer portal.</p>
+<h1 id='version-2'>Version 2</h1><h2 id='version-2-running-elections-list-widget'>Running Elections List Widget</h2>
 <blockquote>
-<p>The function/method below will return templated HTML in the form of a <code>&lt;ul&gt;</code> list of elections that the current voter is eligible to vote in. It will search all <code>Elections</code> belonging to an <code>Organization</code>, <strong>including</strong> sister <code>Organization</code>s (i.e. sharing the same <code>BillingAccount</code>).</p>
+<p>The function/method below will return templated HTML in the form of a <code>&lt;ul&gt;</code> list of elections that the current voter is eligible to vote in. It will search all <code>elections</code> belonging to an <code>organization</code>, <strong>including</strong> sister <code>organization</code>s (i.e. sharing the same <code>billing account</code>).</p>
 </blockquote>
 <div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'addressable/uri'</span>
 <span class="nb">require</span> <span class="s1">'base64'</span>
@@ -364,7 +363,7 @@
 
 <span class="c1"># Parameters:</span>
 <span class="c1"># `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)</span>
-<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)</span>
+<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 30 seconds of current time)</span>
 <span class="c1"># `identifier` - the Voter's identifier for which to search for eligible elections</span>
 <span class="c1"># `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)</span>
 <span class="c1"># `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)</span>
@@ -403,7 +402,7 @@
 </span>
 <span class="c1"># Parameters:
 # `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)
-# `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)
+# `exp` - Unix epoch timestamp (we validate this to within +/- 30 seconds of current time)
 # `identifier` - the Voter's identifier for which to search for eligible elections
 # `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)
 # `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)
@@ -436,7 +435,7 @@
 
 <span class="c1"># Parameters:</span>
 <span class="c1"># `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)</span>
-<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)</span>
+<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 30 seconds of current time)</span>
 <span class="c1"># `identifier` - the Voter's identifier for which to search for eligible elections</span>
 <span class="c1"># `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)</span>
 <span class="c1"># `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)</span>
@@ -469,9 +468,9 @@
 <p>This endpoint authenticates a voting request for a particular organization, and returns an HTML list (<code>&lt;ul&gt;</code>) with links to vote.</p>
 
 <aside class="warning">It is very important that the voter identifiers you use (for example, membership number or email address) are consistent across any elections your organization(s) may run. The list this endpoint presents to voters is based on a search by identifier &mdash; if, for example, identifier `123456` represents Voter A in one election, and Voter B in another, that will allow either Voter A or B to vote for each other in both elections. You almost certainly do not want this! Please ensure your voter identifiers are globally unique.</aside>
-<h3 id='http-request'>HTTP Request</h3>
+<h3 id='version-2-running-elections-list-widget-http-request'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/integrations/v2/elections?{parameters}</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<h3 id='version-2-running-elections-list-widget-query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -505,7 +504,7 @@
 <aside class="notice">
 Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
 </aside>
-<h2 id='voter-status'>Voter Status</h2>
+<h2 id='version-2-voter-status'>Voter Status</h2>
 <blockquote>
 <p>Below is an example request to obtain voter status:</p>
 </blockquote>
@@ -519,7 +518,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 
 <span class="c1"># Parameters:</span>
 <span class="c1"># `oid` - your Organization's ID (available from https://secure.electionbuddy.com/organizations)</span>
-<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 5 minutes of current time)</span>
+<span class="c1"># `exp` - Unix epoch timestamp (we validate this to within +/- 30 seconds of current time)</span>
 <span class="c1"># `identifier` - the Voter's identifier for which to search for eligible elections</span>
 <span class="c1"># `secret_token` - your Organizations Secret Token (https://secure.electionbuddy.com/organizations)</span>
 <span class="c1"># `signature` - a Base64, HMAC-SHA256 signature of the above parameters in order (exp, identifier, oid)</span>
@@ -555,7 +554,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <span class="k">end</span>
 </code></pre></div>
 <p>The same endpoint can be used to obtain a voter&#39;s status, with an <code>Accept</code> header of <code>application/json</code>. This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.</p>
-<h3 id='http-request-2'>HTTP Request</h3>
+<h3 id='version-2-voter-status-http-request'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/integrations/v2/elections?{parameters}</code> (Header: <code>Accept: application/json</code>)</p>
 
 <table><thead>
@@ -571,7 +570,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <td>The only valid election state for voting is <code>running</code>: all other states mean that either voting has not begun yet, or has ended.</td>
 </tr>
 </tbody></table>
-<h1 id='legacy-version-1'>Legacy (Version 1)</h1>
+<h1 id='version-1'>Version 1</h1><h2 id='version-1-election-widget'>Election Widget</h2>
 <blockquote>
 <p>The function/method below will generate a signed anchor <code>&lt;a&gt;</code> element that you can use on your organization&#39;s internal dashboard (i.e. after a member/voter logs in). You can style it as you wish to match your organization&#39;s design or theme. You&#39;ll need to pass in <code>eid</code>, <code>exp</code>, <code>mid</code>, and <code>signature</code> as appropriate.</p>
 </blockquote>
@@ -584,7 +583,6 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <span class="c1"># eid = '12'</span>
 <span class="c1"># mid = 'jane@example.com'</span>
 <span class="c1"># secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
-<span class="c1"># (Contact support to obtain `secret_key`)</span>
 
 <span class="c1">#####</span>
 
@@ -617,7 +615,6 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <span class="c1"># eid = '12'
 # mid = 'jane@example.com'
 # secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='
-# (Contact support to obtain `secret_key`)
 </span>
 <span class="c1">#####
 </span>
@@ -645,7 +642,6 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <span class="c1"># $eid = '12'</span>
 <span class="c1"># $mid = 'jane@example.com'</span>
 <span class="c1"># $secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
-<span class="c1"># (Contact support to obtain `secret_key`)</span>
 
 <span class="c1">#####</span>
 
@@ -670,9 +666,9 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <span class="cp">?&gt;</span>
 </code></pre></div>
 <p>This endpoint authenticates a voting request for a particular user (for example, from your organization&#39;s internal dashboard). If the signature is valid and the voter (identified by <code>mid</code>) has yet to vote, they will be forwarded to a fresh ballot for the election <code>eid</code>.</p>
-<h3 id='http-request'>HTTP Request</h3>
+<h3 id='version-1-election-widget-http-request'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/integrations/v1/sso?{parameters}</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<h3 id='version-1-election-widget-query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -706,7 +702,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <aside class="notice">
 Remember - the query parameters must occur <strong>in order (alphabetically)</strong> as shown above, with the signature <strong>appended</strong> as the last parameter of the query string.
 </aside>
-<h2 id='voter-status'>Voter Status</h2>
+<h2 id='version-1-voter-status'>Voter Status</h2>
 <blockquote>
 <p>Below is an example request to obtain voter status:</p>
 </blockquote>
@@ -721,7 +717,6 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <span class="c1"># eid = '12'</span>
 <span class="c1"># mid = 'jane@example.com'</span>
 <span class="c1"># secret_key = 'N+vlebJgl/Lkxtu2b4hOe+JUTpVm5arWGJbQ6U7BOFs='</span>
-<span class="c1"># (Contact support to obtain `secret_key`)</span>
 
 <span class="c1">#####</span>
 
@@ -753,7 +748,7 @@ Remember - the query parameters must occur <strong>in order (alphabetically)</st
 <p>The same endpoint can be used to obtain a voter&#39;s status. This can be used, for example, to send out your own custom vote reminders to those voters who have not yet voted.</p>
 
 <p>Voter status requests use the same parameters as above, but will request a JSON response (header of: <code>Accept: application/json</code>).</p>
-<h3 id='http-request-2'>HTTP Request</h3>
+<h3 id='version-1-voter-status-http-request'>HTTP Request</h3>
 <p><code>GET https://secure.electionbuddy.com/sso?{parameters}</code> (Header: <code>Accept: application/json</code>)</p>
 
 <table><thead>
