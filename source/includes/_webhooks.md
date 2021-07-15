@@ -75,14 +75,17 @@ then voter choices will be included in the payload.
   // ... other fields ...
   "questions": [
     {
-      "question_id": "123",
-      "question_text": "Bylaw Amendment Approval of Article XLII",
-      "answers": [
-        {
-          "answer_id": "1234",
-          "answer_text": "Yes - I approve the amendments",
-        }
-      ]
+      "question": "Bylaw Amendment Approval of Article XLII",
+      "type": "plurality",
+      "answers": {
+        "regular": [
+          {
+            "title": "Yes - I approve the amendments",
+            "choice": "true"
+          }
+        ],
+        "write_ins": []
+      }
     }
   ],
 }
