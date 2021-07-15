@@ -13,6 +13,7 @@ includes:
   - v2
   - v1
   - errors
+  - webhooks
 
 search: true
 ---
@@ -24,3 +25,5 @@ Welcome to the Voting Integrations (VI) documentation for ElectionBuddy (electio
 **V1** focuses on providing you with a method to generate a signed URL to send your voters to a specific election.
 
 **V2** expands on this by allowing you to give your voters a list of all running elections in which they are eligible to vote, and allowing them to vote in any or all of them in turn while being authenticated behind your customer portal.
+
+**Webhooks**, in contrast, sends requests to a URL provided by you. This allows integration with services that supoort recieving webhooks, or possibly your own web server, if configuerd appropriately.
