@@ -63,7 +63,7 @@ given event happened. If the gien event has happened then the value with be a
 UNIX timestamp. That is, a number of *seconds* after January 1st, 1970.
 If the given event has not happened, the value will be `null`.
 
-## Voter Choices
+## Voter Choices Overview
 
 If your Voter Anonymity settings allow administrators to view voter choices,
 then voter choices will be included in the payload.
@@ -87,7 +87,7 @@ then voter choices will be included in the payload.
         "write_ins": []
       }
     }
-  ],
+  ]
 }
 ```
 
