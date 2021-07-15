@@ -20,12 +20,6 @@ the voter list section fo the vote setup.
 
 ## Payload Overview
 
-The HTTP POST requests will contain a JSON payload. The payload contains
-information about your vote, the organization associated with that vote,
-and the current status of the vote. The parts of the payload will be
-different depending on your vote configuration.
-
-
 ```json
 {
     "organization_id": 1234,
@@ -55,6 +49,11 @@ different depending on your vote configuration.
 }
 ```
 
+The HTTP POST requests will contain a JSON payload. The payload contains
+information about your vote, the organization associated with that vote,
+and the current status of the vote. The parts of the payload will be
+different depending on your vote configuration.
+
 Voter information, such as their postal address, SMS number and email address
 will be included if that information is included in the voter list.
 
@@ -64,11 +63,6 @@ UNIX timestamp. That is, a number of *seconds* after January 1st, 1970.
 If the given event has not happened, the value will be `null`.
 
 ## Voter Choices Overview
-
-If your Voter Anonymity settings allow administrators to view voter choices,
-then voter choices will be included in the payload.
-
-![radio buttons offering three choices: Secret Ballot, Poll, and Show of Hands](voter-choices.png)
 
 ```json
 {
@@ -90,6 +84,11 @@ then voter choices will be included in the payload.
   ]
 }
 ```
+
+If your Voter Anonymity settings allow administrators to view voter choices,
+then voter choices will be included in the payload.
+
+![radio buttons offering three choices: Secret Ballot, Poll, and Show of Hands](voter-choices.png)
 
 There are six types of questions corresponding to the 6 voting system options
 available when adding Positions/Questions.
@@ -125,9 +124,6 @@ in the appropriate array.
 
 ## Plurality
 
-For this question type, `"choice"` will always be `"true"`, assuming abtaining
-is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
-
 ```json
 {
   // ... other fields ...
@@ -158,15 +154,10 @@ is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
 }
 ```
 
+For this question type, `"choice"` will always be `"true"`, assuming abtaining
+is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+
 ## Cumulative
-
-For this question type, `"choice"` will be a number, (represented as a string),
-assuming abtaining is not allowed. Otherwise, see
-[the Abstention section](#webhooks-abstention).
-
-The numbers here represents how many votes the voter assigned to the option.
-
-Options with zero votes assigned will not show up.
 
 ```json
 {
@@ -198,16 +189,15 @@ Options with zero votes assigned will not show up.
 }
 ```
 
-## Preferential
-
 For this question type, `"choice"` will be a number, (represented as a string),
 assuming abtaining is not allowed. Otherwise, see
 [the Abstention section](#webhooks-abstention).
 
-The numbers here represents the relavtive ordering of options that was selected
-by the voter. Note that, *unlike* the numbering on the ballot, larger numbers
-indicate *more preferred* options, and lower numbers indicate *less preferred*
-options.
+The numbers here represents how many votes the voter assigned to the option.
+
+Options with zero votes assigned will not show up.
+
+## Preferential
 
 ```json
 {
@@ -239,10 +229,16 @@ options.
 }
 ```
 
-## Approval
+For this question type, `"choice"` will be a number, (represented as a string),
+assuming abtaining is not allowed. Otherwise, see
+[the Abstention section](#webhooks-abstention).
 
-For this question type, `"choice"` will always be `"true"`, assuming abtaining
-is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+The numbers here represents the relavtive ordering of options that was selected
+by the voter. Note that, *unlike* the numbering on the ballot, larger numbers
+indicate *more preferred* options, and lower numbers indicate *less preferred*
+options.
+
+## Approval
 
 ```json
 {
@@ -269,13 +265,13 @@ is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
 }
 ```
 
+For this question type, `"choice"` will always be `"true"`, assuming abtaining
+is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+
 Note that write-ins are not permitted for Approval voting, but we still send
 down a `"write_ins"` array.
 
 ## Nomination
-
-For this question type, `"choice"` will always be `"true"`, assuming abtaining
-is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
 
 ```json
 {
@@ -302,28 +298,14 @@ is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
 }
 ```
 
+For this question type, `"choice"` will always be `"true"`, assuming abtaining
+is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+
 Note that regular votes do not occur for Nomination voting, except for when a
 voter [abstains](#webhooks-abstention), (if enabled) but we sill send down
 a `"regular"` array.
 
 ## Scored
-
-For this question type, `"choice"` will either be a number, (represented as a
-string), or the string `"not_applicable"`, assuming abtaining is not allowed.
-Otherwise, see [the Abstention section](#webhooks-abstention). The string
-`"not_applicable"` only shows up if the question allows that as an option.
-
-The numbers here directly correspond to the numbers the voter selected on the
-ballot. Multiple scores will appear within the same object in the `"questions"`
-array, if multiple scores are asked for on the same question.
-
-The default scale, without customization, is as follows:
-
-* 1: Strongly disagree
-* 2: Disagree
-* 3: Neither agree nor disagree
-* 4: Agree
-* 5: Strongly agree
 
 ```json
 {
@@ -350,13 +332,27 @@ The default scale, without customization, is as follows:
 }
 ```
 
+For this question type, `"choice"` will either be a number, (represented as a
+string), or the string `"not_applicable"`, assuming abtaining is not allowed.
+Otherwise, see [the Abstention section](#webhooks-abstention). The string
+`"not_applicable"` only shows up if the question allows that as an option.
+
+The numbers here directly correspond to the numbers the voter selected on the
+ballot. Multiple scores will appear within the same object in the `"questions"`
+array, if multiple scores are asked for on the same question.
+
+The default scale, without customization, is as follows:
+
+* 1: Strongly disagree
+* 2: Disagree
+* 3: Neither agree nor disagree
+* 4: Agree
+* 5: Strongly agree
+
 Note that write-ins are not permitted for Scored voting, but we still send
 down a `"write_ins"` array.
 
 ## Absention
-If a question allows abstaining, then no matter what type of question it is,
-when a voter abstains, then an object with a `"choice"` field with the value
-`"abstain"` will be placed in the `"regular"` array.
 
 ```json
 {
@@ -378,3 +374,7 @@ when a voter abstains, then an object with a `"choice"` field with the value
   ],
 }
 ```
+
+If a question allows abstaining, then no matter what type of question it is,
+when a voter abstains, then an object with a `"choice"` field with the value
+`"abstain"` will be placed in the `"regular"` array.
