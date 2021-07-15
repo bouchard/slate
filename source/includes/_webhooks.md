@@ -90,3 +90,22 @@ then voter choices will be included in the payload.
   ],
 }
 ```
+
+There are six types of questions corresponding to the 6 voting system options
+available when adding Positions/Questions.
+
+![A drop down offering 6 choices: Plurality, Cumulative, Preferential, Approval, Nomination, and Scored](voting-system-options.png)
+
+Correspondingly, The `"type"` field on each object in the `"questions"` array
+will have one of the following values:
+
+* `"plurality"`
+* `"cumulative"`
+* `"preferential"`
+* `"approval"`
+* `"nomination"`
+* `"scored"`
+
+The `"answers"` field will have slightly different contents depending on the
+`"type"`; the overal shape will be the same, but the values for the `"title"`
+and `"choice"` fields, and the proper way to interpret them will be different.
