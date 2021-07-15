@@ -109,3 +109,29 @@ will have one of the following values:
 The `"answers"` field will have slightly different contents depending on the
 `"type"`; the overal shape will be the same, but the values for the `"title"`
 and `"choice"` fields, and the proper way to interpret them will be different.
+
+### Absention
+If a question allows abstaining, then no matter what type of question it is,
+when a voter abstains, then an object with a `"choice"` field with the value
+`"abstain"` will be placed in the `"regular"` array.
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Executive Board",
+      "type": "nomination",
+      "answers": {
+        "regular": [
+          {
+            "title": "abstain",
+            "choice": "abstain"
+          }
+        ],
+        "write_ins": []
+      }
+    }
+  ],
+}
+```
