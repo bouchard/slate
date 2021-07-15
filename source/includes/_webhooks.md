@@ -107,10 +107,253 @@ will have one of the following values:
 * `"scored"`
 
 The `"answers"` field will have slightly different contents depending on the
-`"type"`; the overal shape will be the same, but the values for the `"title"`
-and `"choice"` fields, and the proper way to interpret them will be different.
+`"type"`. The overal shape will be the same but the `"choice"` fields,
+on the objects inside the `"regular"` and/or `"write_ins"` arrays, will be have
+different possible values and the proper way to interpret those values will be
+different.
 
-### Absention
+`"title"` will always contain the name of the option the voter selected. For
+example, the name of the candidate.
+
+If write-in answers are allowed, (not available for all question types), then
+any write-in answers will appear in the `"write_ins"`array. All other answers
+will show up in the `"regular"`array. The written in answer will appear in the
+`"title"` field.
+
+If multiple options were selected then multiple objects can show up
+in the appropriate array.
+
+## Plurality
+
+For this question type, `"choice"` will always be `"true"`, assuming abtaining
+is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Council Leader",
+      "type": "plurality",
+      "answers": {
+        "regular": [
+          {
+            "title": "Jane Doe",
+            "choice": "true"
+          },
+          {
+            "title": "John Doe",
+            "choice": "true"
+          }
+        ],
+        "write_ins": [
+          {
+            "title": "A. N. Other",
+            "choice": "true"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+## Cumulative
+
+For this question type, `"choice"` will be a number, (represented as a string),
+assuming abtaining is not allowed. Otherwise, see
+[the Abstention section](#webhooks-abstention).
+
+The numbers here represents how many votes the voter assigned to the option.
+
+Options with zero votes assigned will not show up.
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Council Leader",
+      "type": "cumulative",
+      "answers": {
+        "regular": [
+          {
+            "title": "Jane Doe",
+            "choice": "2"
+          },
+          {
+            "title": "John Doe",
+            "choice": "1"
+          }
+        ],
+        "write_ins": [
+          {
+            "title": "A. N. Other",
+            "choice": "1"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+## Preferential
+
+For this question type, `"choice"` will be a number, (represented as a string),
+assuming abtaining is not allowed. Otherwise, see
+[the Abstention section](#webhooks-abstention).
+
+The numbers here represents the relavtive ordering of options that was selected
+by the voter. Note that, *unlike* the numbering on the ballot, larger numbers
+indicate *more preferred* options, and lower numbers indicate *less preferred*
+options.
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Council Leader",
+      "type": "preferential",
+      "answers": {
+        "regular": [
+          {
+            "title": "Jane Doe",
+            "choice": "2"
+          },
+          {
+            "title": "John Doe",
+            "choice": "1"
+          }
+        ],
+        "write_ins": [
+          {
+            "title": "A. N. Other",
+            "choice": "3"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+## Approval
+
+For this question type, `"choice"` will always be `"true"`, assuming abtaining
+is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Council Leader",
+      "type": "approval",
+      "answers": {
+        "regular": [
+          {
+            "title": "Jane Doe",
+            "choice": "true"
+          },
+          {
+            "title": "John Doe",
+            "choice": "true"
+          }
+        ],
+        "write_ins": []
+      }
+    }
+  ]
+}
+```
+
+Note that write-ins are not permitted for Approval voting, but we still send
+down a `"write_ins"` array.
+
+## Nomination
+
+For this question type, `"choice"` will always be `"true"`, assuming abtaining
+is not allowed. Otherwise, see [the Abstention section](#webhooks-abstention).
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Council Leader",
+      "type": "nomination",
+      "answers": {
+        "regular": [],
+        "write_ins": [
+          {
+            "title": "Jane Doe",
+            "choice": "true"
+          },
+          {
+            "title": "A. N. Other",
+            "choice": "true"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Note that regular votes do not occur for Nomination voting, except for when a
+voter [abstains](#webhooks-abstention), (if enabled) but we sill send down
+a `"regular"` array.
+
+## Scored
+
+For this question type, `"choice"` will either be a number, (represented as a
+string), or the string `"not_applicable"`, assuming abtaining is not allowed.
+Otherwise, see [the Abstention section](#webhooks-abstention). The string
+`"not_applicable"` only shows up if the question allows that as an option.
+
+The numbers here directly correspond to the numbers the voter selected on the
+ballot. Multiple scores will appear within the same object in the `"questions"`
+array, if multiple scores are asked for on the same question.
+
+The default scale, without customization, is as follows:
+
+* 1: Strongly disagree
+* 2: Disagree
+* 3: Neither agree nor disagree
+* 4: Agree
+* 5: Strongly agree
+
+```json
+{
+  // ... other fields ...
+  "questions": [
+    {
+      "question": "Member Feedback: $4300 Excess Budget Spending",
+      "type": "scored",
+      "answers": {
+        "regular": [
+          {
+            "title": "Increase security/surveillance hours",
+            "choice": "3"
+          },
+          {
+            "title": "Hire a caterer for the Annual General Meeting",
+            "choice": "5"
+          }
+        ],
+        "write_ins": []
+      }
+    }
+  ]
+}
+```
+
+Note that write-ins are not permitted for Scored voting, but we still send
+down a `"write_ins"` array.
+
+## Absention
 If a question allows abstaining, then no matter what type of question it is,
 when a voter abstains, then an object with a `"choice"` field with the value
 `"abstain"` will be placed in the `"regular"` array.
